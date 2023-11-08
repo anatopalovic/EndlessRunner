@@ -1,0 +1,45 @@
+# Unity generated files
+[Ll]ibrary/
+[Tt]emp/
+[Oo]bj/
+[Bb]uild/
+[Bb]uilds/
+[Ll]ogs/
+[Uu]ser[Ss]ettings/
+[Pp]ackages/
+[Rr]esources/
+[ProjectSettings]/
+[VideoPlayer]/
+
+# MemoryCaptures can be useful, but we don't need it in our repositories.
+[Mm]emoryCaptures/
+
+# Asset meta data should only be ignored when the corresponding asset is also ignored
+![Aa][Ss][Ss][Ee][Tt]/[Ss]*.[Mm][Ee][Tt][Aa]
+
+# Uncomment if you wish to ignore the include list, the .sln file, and the .suo files
+# [Ii]ncludes/
+
+# Visual Studio 2019 config folder
+.vs2019/
+
+# Rider
+.idea/
+
+# User-specific files
+*.suo
+*.user
+*.userprefs
+
+# Steamworks redistributable files
+Redist/
+
+# Unity's artifact files
+[Oo]bj/
+[0-9]*.bak
+[0-9]*.unitypackage
+[0-9]*.unity
+*.tmp
+*.svd
+
+/Library/Artifacts/
