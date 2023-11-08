@@ -51,10 +51,26 @@ namespace TempleRun
             prevTile = Instantiate(tile.gameObject, currentTileLocation, newTileRotation);
             currentTiles.Add(prevTile);
 
+            if (shouldSpawnObstacle)
+            {
+                SpawnObstacle();
+            }
+
             if (tile.type == TileType.STRAIGHT)
             {
                 currentTileLocation += Vector3.Scale(prevTile.GetComponent<Renderer>().bounds.size, currentTileDirection);
             }
+        }
+
+        private void SpawnObstacle()
+        {
+            if (Random.value > 0.2f) { return; }
+
+            var obstaclePrefab = SelectRandomGameObjectFromList(obstacles);
+            var newObjectRotation = obstaclePrefab.gameObject.transform.rotation * Quaternion.LookRotation(currentTileDirection, Vector3.up);
+
+            var obstacle = Instantiate(obstaclePrefab, currentTileLocation, newObjectRotation);
+            currentObstacles.Add(obstacle);
         }
 
         private GameObject SelectRandomGameObjectFromList(List<GameObject> list)
@@ -94,7 +110,21 @@ namespace TempleRun
 
         private void DeletePreviousTiles()
         {
+            while (currentTiles.Count != 1)
+            {
+                var tile = currentTiles[0];
+                currentTiles.RemoveAt(0);
+                Destroy(tile);
+            }
 
+            while (currentObstacles.Count != 0)
+            {
+                var obstacle = currentObstacles[0];
+                currentObstacles.RemoveAt(0);
+                Destroy(obstacle);
+            }
         }
+
+
     }
 }
