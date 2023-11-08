@@ -58,6 +58,7 @@
     <Compile Include="Assets\TutorialInfo\Scripts\Readme.cs" />
     <Compile Include="Assets\TempleRunPrefabs\TileSpawner.cs" />
     <Compile Include="Assets\TempleRunPrefabs\Tile.cs" />
+    <Compile Include="Assets\TempleRunPrefabs\PlayerController.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">
