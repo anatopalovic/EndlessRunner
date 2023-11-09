@@ -33,7 +33,7 @@ namespace TempleRun
 
         private float playerSpeed;
         private float gravity;
-        private Vector3 movementDirection;
+        private Vector3 movementDirection = Vector3.forward;
         private Vector3 playerVelocity;
 
         private PlayerInput playerInput;
@@ -107,6 +107,7 @@ namespace TempleRun
 
         private void PlayerTurn(InputAction.CallbackContext context)
         {
+            var value = context.ReadValue<float>();
             var turnPosition = CheckTurn(context.ReadValue<float>());
             if(!turnPosition.HasValue) { return; }
 
