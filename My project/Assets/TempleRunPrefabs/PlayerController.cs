@@ -30,6 +30,7 @@ namespace TempleRun
         private float playerSpeed;
         private float gravity;
         private Vector3 movementDirection;
+        private Vector3 playerVelocity;
 
         private PlayerInput playerInput;
         private InputAction turnAction;
@@ -42,9 +43,14 @@ namespace TempleRun
         {
             playerInput = GetComponent<PlayerInput>();
             characterController = GetComponent<CharacterController>();
+
             turnAction = playerInput.actions["Turn"];
             jumpAction = playerInput.actions["Jump"];
             slideAction = playerInput.actions["Slide"];
+            
+            turnAction.Enable();
+            jumpAction.Enable();
+            slideAction.Enable();
         }
 
         void Start()
@@ -56,6 +62,14 @@ namespace TempleRun
         void Update()
         {
             characterController.Move(playerSpeed * Time.deltaTime * transform.forward);
+
+            if(IsGrounded() && playerVelocity.y < 0)
+            {
+                playerVelocity.y = 0f;
+            }
+
+            playerVelocity.y += gravity * Time.deltaTime;
+            characterController.Move(playerVelocity * Time.deltaTime);
         }
 
         void OnEnable()
@@ -74,6 +88,10 @@ namespace TempleRun
 
         private void PlayerJump(InputAction.CallbackContext context)
         {
+            // if(!IsGrounded()) { return; }
+
+            playerVelocity.y += Mathf.Sqrt(jumpHeight * gravity * -3f);
+            characterController.Move(playerVelocity * Time.deltaTime);
         }
 
         private void PlayerSlide(InputAction.CallbackContext context)
@@ -84,7 +102,7 @@ namespace TempleRun
         {
         }
 
-        private bool IsGrounded(float length)
+        private bool IsGrounded(float length = .2f)
         {
             Vector3 raycastOriginFirst = transform.position;
             raycastOriginFirst.y -= characterController.height / 2f;
