@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Events;
@@ -7,7 +8,7 @@ using UnityEngine.InputSystem;
 
 namespace TempleRun
 {
-    [RequireComponent(typeof(CharacterController), typeof(PlayerInput))]
+    [RequireComponent(typeof(CharacterController), typeof(PlayerInput), typeof(Animator))]
     public class PlayerController : MonoBehaviour
     {
         [SerializeField]
@@ -31,10 +32,15 @@ namespace TempleRun
         [SerializeField]
         private LayerMask turnLayer;
 
+        [SerializeField]
+        private AnimationClip slideAnimationClip;
+
         private float playerSpeed;
         private float gravity;
         private Vector3 movementDirection = Vector3.forward;
         private Vector3 playerVelocity;
+        private bool sliding = false;
+        private int slidingAnimationId;
 
         private PlayerInput playerInput;
         private InputAction turnAction;
@@ -42,6 +48,7 @@ namespace TempleRun
         private InputAction slideAction;
 
         private CharacterController characterController;
+        private Animator animator;
 
         [SerializeField]
         private UnityEvent<Vector3> turnEvent;
@@ -50,6 +57,9 @@ namespace TempleRun
         {
             playerInput = GetComponent<PlayerInput>();
             characterController = GetComponent<CharacterController>();
+            animator = GetComponent<Animator>();
+
+            slidingAnimationId = Animator.StringToHash("SlidingAnimation");
 
             turnAction = playerInput.actions["Turn"];
             jumpAction = playerInput.actions["Jump"];
@@ -103,6 +113,27 @@ namespace TempleRun
 
         private void PlayerSlide(InputAction.CallbackContext context)
         {
+            if(!sliding && IsGrounded())
+            {
+                StartCoroutine(Slide());
+            }
+        }
+
+        private IEnumerator Slide()
+        {
+            var originalControllerCenter = characterController.center;
+            var newControllerCenter = characterController.center;
+            characterController.height /= 2;
+            newControllerCenter.y -= characterController.height / 2;
+            characterController.center = newControllerCenter;
+
+            sliding = true;
+            animator.Play(slidingAnimationId);
+            yield return new WaitForSeconds(slideAnimationClip.length);
+
+            characterController.height *= 2;
+            characterController.center = originalControllerCenter;
+            sliding = false;
         }
 
         private void PlayerTurn(InputAction.CallbackContext context)
