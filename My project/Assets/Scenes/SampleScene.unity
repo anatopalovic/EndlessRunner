@@ -296,7 +296,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d360e0cb1f441214aa0387cf80d3ab42, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  initialPlayerSpeed: 4
+  initialPlayerSpeed: 10
   maximumPlayerSpeed: 30
   playerSpeedIncreaseRate: 0.1
   jumpHeight: 1
@@ -307,7 +307,11 @@ MonoBehaviour:
   turnLayer:
     serializedVersion: 2
     m_Bits: 128
+  obstacleLayer:
+    serializedVersion: 2
+    m_Bits: 256
   slideAnimationClip: {fileID: 7400000, guid: 6e2a22868344ec549992d7f5a45b9397, type: 2}
+  playerSpeed: 0
   animator: {fileID: 2090654566}
   turnEvent:
     m_PersistentCalls:
@@ -586,7 +590,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963194225}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.2784788, y: -3e-45, z: 1e-45, w: 0.9604424}
+  m_LocalRotation: {x: 0.2784788, y: 1e-45, z: 0, w: 0.9604424}
   m_LocalPosition: {x: 0, y: 8.503, z: -9.54}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -691,7 +695,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1407532335}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.2784788, y: -3e-45, z: 1e-45, w: 0.9604424}
+  m_LocalRotation: {x: 0.2784788, y: 1e-45, z: 0, w: 0.9604424}
   m_LocalPosition: {x: 0, y: 8.503, z: -9.54}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0

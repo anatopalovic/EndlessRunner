@@ -33,9 +33,14 @@ namespace TempleRun
         private LayerMask turnLayer;
 
         [SerializeField]
+        private LayerMask obstacleLayer;
+
+        [SerializeField]
         private AnimationClip slideAnimationClip;
 
+        [SerializeField]
         private float playerSpeed;
+        
         private float gravity;
         private Vector3 movementDirection = Vector3.forward;
         private Vector3 playerVelocity;
@@ -79,6 +84,12 @@ namespace TempleRun
 
         void Update()
         {
+            if(!IsGrounded(20f))
+            {
+                GameOver();
+                return;
+            }
+
             characterController.Move(playerSpeed * Time.deltaTime * transform.forward);
 
             if (IsGrounded() && playerVelocity.y < 0)
@@ -140,7 +151,10 @@ namespace TempleRun
         private void PlayerTurn(InputAction.CallbackContext context)
         {
             var turnPosition = CheckTurn(context.ReadValue<float>());
-            if(!turnPosition.HasValue) { return; }
+            if(!turnPosition.HasValue) { 
+                GameOver();
+                return; 
+            }
 
             var targetDirection = Quaternion.AngleAxis(90 * context.ReadValue<float>(), Vector3.up) * movementDirection;
             turnEvent.Invoke(targetDirection);
@@ -190,6 +204,19 @@ namespace TempleRun
 
             return Physics.Raycast(raycastOriginFirst, Vector3.down, out RaycastHit hit, length, groundLayer) ||
             Physics.Raycast(raycastOriginSecond, Vector3.down, out RaycastHit hit2, length, groundLayer);
+        }
+
+        private void GameOver()
+        {
+            Debug.Log("Game over!");
+        }
+
+        private void OnControllerColliderHit(ControllerColliderHit hit) 
+        {
+            if((1 << hit.collider.gameObject.layer & obstacleLayer) != 0)
+            {
+                GameOver();
+            }    
         }
     }
 }
