@@ -8,7 +8,7 @@ using UnityEngine.InputSystem;
 
 namespace TempleRun
 {
-    [RequireComponent(typeof(CharacterController), typeof(PlayerInput), typeof(Animator))]
+    [RequireComponent(typeof(CharacterController), typeof(PlayerInput))]
     public class PlayerController : MonoBehaviour
     {
         [SerializeField]
@@ -48,6 +48,8 @@ namespace TempleRun
         private InputAction slideAction;
 
         private CharacterController characterController;
+
+        [SerializeField]
         private Animator animator;
 
         [SerializeField]
@@ -57,7 +59,6 @@ namespace TempleRun
         {
             playerInput = GetComponent<PlayerInput>();
             characterController = GetComponent<CharacterController>();
-            animator = GetComponent<Animator>();
 
             slidingAnimationId = Animator.StringToHash("SlidingAnimation");
 
@@ -138,7 +139,6 @@ namespace TempleRun
 
         private void PlayerTurn(InputAction.CallbackContext context)
         {
-            var value = context.ReadValue<float>();
             var turnPosition = CheckTurn(context.ReadValue<float>());
             if(!turnPosition.HasValue) { return; }
 
