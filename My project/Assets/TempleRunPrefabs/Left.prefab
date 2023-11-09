@@ -382,7 +382,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6003375000781336350}
   - component: {fileID: 1509282039614810148}
-  m_Layer: 6
+  m_Layer: 7
   m_Name: Turn Threshold
   m_TagString: Untagged
   m_Icon: {fileID: 0}

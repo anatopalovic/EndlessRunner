@@ -1,6 +1,7 @@
 using System;
-using UnityEditor.Experimental.GraphView;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.InputSystem;
 
 
@@ -27,6 +28,9 @@ namespace TempleRun
         [SerializeField]
         private LayerMask groundLayer;
 
+        [SerializeField]
+        private LayerMask turnLayer;
+
         private float playerSpeed;
         private float gravity;
         private Vector3 movementDirection;
@@ -39,6 +43,9 @@ namespace TempleRun
 
         private CharacterController characterController;
 
+        [SerializeField]
+        private UnityEvent<Vector3> turnEvent;
+
         void Awake()
         {
             playerInput = GetComponent<PlayerInput>();
@@ -47,7 +54,7 @@ namespace TempleRun
             turnAction = playerInput.actions["Turn"];
             jumpAction = playerInput.actions["Jump"];
             slideAction = playerInput.actions["Slide"];
-            
+
             turnAction.Enable();
             jumpAction.Enable();
             slideAction.Enable();
@@ -63,7 +70,7 @@ namespace TempleRun
         {
             characterController.Move(playerSpeed * Time.deltaTime * transform.forward);
 
-            if(IsGrounded() && playerVelocity.y < 0)
+            if (IsGrounded() && playerVelocity.y < 0)
             {
                 playerVelocity.y = 0f;
             }
@@ -88,7 +95,7 @@ namespace TempleRun
 
         private void PlayerJump(InputAction.CallbackContext context)
         {
-            // if(!IsGrounded()) { return; }
+            if (!IsGrounded()) { return; }
 
             playerVelocity.y += Mathf.Sqrt(jumpHeight * gravity * -3f);
             characterController.Move(playerVelocity * Time.deltaTime);
@@ -100,6 +107,43 @@ namespace TempleRun
 
         private void PlayerTurn(InputAction.CallbackContext context)
         {
+            var turnPosition = CheckTurn(context.ReadValue<float>());
+            if(!turnPosition.HasValue) { return; }
+
+            var targetDirection = Quaternion.AngleAxis(90 * context.ReadValue<float>(), Vector3.up) * movementDirection;
+            turnEvent.Invoke(targetDirection);
+            Turn(context.ReadValue<float>(), turnPosition);
+        }
+
+        private void Turn(float turnValue, Vector3? turnPosition)
+        {
+            if(!turnPosition.HasValue) { return; }
+            var tempPlayerPosition = new Vector3(turnPosition.Value.x, transform.position.y, turnPosition.Value.z);
+            characterController.enabled = false;
+            transform.position = tempPlayerPosition;
+            characterController.enabled = true;
+
+            var targetRotation = transform.rotation * Quaternion.Euler(0, 90 * turnValue, 0);
+            transform.rotation = targetRotation;
+            movementDirection = transform.forward.normalized;
+        }
+
+        private Vector3? CheckTurn(float turnValue)
+        {
+            Collider[] hitColliders = Physics.OverlapSphere(transform.position, .1f, turnLayer);
+            if (hitColliders.Length != 0)
+            {
+                Tile tile = hitColliders[0].transform.parent.GetComponent<Tile>();
+                TileType tileType = tile.type;
+                if ((tileType == TileType.LEFT && turnValue == -1) ||
+                (tileType == TileType.RIGHT && turnValue == 1) ||
+                tileType == TileType.SIDEWAYS)
+                {
+                    return tile.pivot.position;
+                }
+            }
+
+            return null;
         }
 
         private bool IsGrounded(float length = .2f)

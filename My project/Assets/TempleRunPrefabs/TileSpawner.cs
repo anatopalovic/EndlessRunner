@@ -102,7 +102,7 @@ namespace TempleRun
             int currentPathLength = Random.Range(minimumStraightTiles, maximumStraightTiles);
             for (int i = 0; i < currentPathLength; i++)
             {
-                SpawnTile(startingTile.GetComponent<Tile>(), !(i == 0));
+                SpawnTile(startingTile.GetComponent<Tile>(), false);
             }
 
             SpawnTile(SelectRandomGameObjectFromList(turnTiles).GetComponent<Tile>());
