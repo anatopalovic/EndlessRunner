@@ -40,12 +40,16 @@ namespace TempleRun
 
         [SerializeField]
         private float playerSpeed;
-        
+
+        [SerializeField]
+        private float scoreMultiplier = 10f;
+
         private float gravity;
         private Vector3 movementDirection = Vector3.forward;
         private Vector3 playerVelocity;
         private bool sliding = false;
         private int slidingAnimationId;
+        private float score = 0;
 
         private PlayerInput playerInput;
         private InputAction turnAction;
@@ -59,6 +63,12 @@ namespace TempleRun
 
         [SerializeField]
         private UnityEvent<Vector3> turnEvent;
+        
+        [SerializeField]
+        private UnityEvent<int> gameOverEvent;
+
+        [SerializeField]
+        private UnityEvent<int> scoreUpdateEvent;
 
         void Awake()
         {
@@ -89,6 +99,9 @@ namespace TempleRun
                 GameOver();
                 return;
             }
+
+            score += scoreMultiplier * Time.deltaTime;
+            scoreUpdateEvent.Invoke((int)score);
 
             characterController.Move(playerSpeed * Time.deltaTime * transform.forward);
 
@@ -209,6 +222,8 @@ namespace TempleRun
         private void GameOver()
         {
             Debug.Log("Game over!");
+            gameOverEvent.Invoke((int)score);
+            gameObject.SetActive(false);
         }
 
         private void OnControllerColliderHit(ControllerColliderHit hit) 
