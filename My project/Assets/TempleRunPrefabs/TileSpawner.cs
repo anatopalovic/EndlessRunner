@@ -64,7 +64,7 @@ namespace TempleRun
 
         private void SpawnObstacle()
         {
-            if (Random.value > 0.2f) { return; }
+            if (Random.value > 0.4f) { return; }
 
             var obstaclePrefab = SelectRandomGameObjectFromList(obstacles);
             var newObjectRotation = obstaclePrefab.gameObject.transform.rotation * Quaternion.LookRotation(currentTileDirection, Vector3.up);

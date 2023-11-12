@@ -112,6 +112,12 @@ namespace TempleRun
 
             playerVelocity.y += gravity * Time.deltaTime;
             characterController.Move(playerVelocity * Time.deltaTime);
+
+            if(playerSpeed < maximumPlayerSpeed)
+            {
+                playerSpeed += Time.deltaTime * playerSpeedIncreaseRate;
+                gravity = initialGravityValue - playerSpeed;
+            }
         }
 
         void OnEnable()
