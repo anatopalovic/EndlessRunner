@@ -853,5 +853,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="Assembly-CSharp.csproj" />
+    <ProjectReference Include="lootlocker.lootlockersdk.runtime.csproj" />
+    <ProjectReference Include="LootLockerExamples.csproj" />
   </ItemGroup>
 </Project>

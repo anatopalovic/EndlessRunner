@@ -59,6 +59,7 @@
     <Compile Include="Assets\TutorialInfo\Scripts\Readme.cs" />
     <Compile Include="Assets\TempleRunPrefabs\TileSpawner.cs" />
     <Compile Include="Assets\TempleRunPrefabs\Tile.cs" />
+    <Compile Include="Assets\TempleRunPrefabs\GameManager.cs" />
     <Compile Include="Assets\TempleRunPrefabs\PlayerController.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -828,5 +829,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="lootlocker.lootlockersdk.runtime.csproj" />
+    <ProjectReference Include="LootLockerExamples.csproj" />
   </ItemGroup>
 </Project>
