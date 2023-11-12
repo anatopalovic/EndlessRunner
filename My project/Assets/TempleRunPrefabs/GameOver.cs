@@ -24,7 +24,7 @@ public class GameOver : MonoBehaviour
     private TextMeshProUGUI scoreText;
 
     private int score = 0;
-    private string leaderboardId = "18683";
+    private string leaderboardId = "scoresLdrbKey";
     private int leaderboardTopCount = 10;
 
     public void StopGame(int score)
@@ -32,7 +32,8 @@ public class GameOver : MonoBehaviour
         gameOverCanvas.SetActive(true);
         this.score = score;
         scoreText.text = score.ToString();
-        SubmitScore();
+
+        GetLeaderboardRequest();
     }
 
     public void SubmitScore()
@@ -43,13 +44,37 @@ public class GameOver : MonoBehaviour
     private IEnumerator SubmitScoreToLeaderboard()
     {
         bool nameSet = false;
-        nameSet = SetPlayerNameRequest(nameSet);
+
+        LootLockerSDKManager.SetPlayerName(nameInputField.text, response =>
+        {
+            if (response.success)
+            {
+                Debug.Log("Successfully set player name.");
+                nameSet = true;
+            }
+            else
+            {
+                Debug.Log("Failed to set player name.");
+            }
+        });
+
 
         yield return new WaitUntil(() => nameSet);
         if (!nameSet) yield break;
 
         bool scoreSubmitted = false;
-        scoreSubmitted = SubmitScoreRequest(scoreSubmitted);
+        LootLockerSDKManager.SubmitScore(nameInputField.text, score, leaderboardId, response =>
+        {
+            if (response.success)
+            {
+                Debug.Log("Successfully submitted score.");
+                scoreSubmitted = true;
+            }
+            else
+            {
+                Debug.Log("Failed to submit the score.");
+            }
+        });
 
         yield return new WaitUntil(() => scoreSubmitted);
         if (!scoreSubmitted) yield break;
@@ -86,38 +111,6 @@ public class GameOver : MonoBehaviour
 
             Debug.Log("Failed to get scores from leaderboard.");
         });
-    }
-
-    private bool SubmitScoreRequest(bool scoreSubmitted)
-    {
-        LootLockerSDKManager.SubmitScore("", score, leaderboardId, response =>
-        {
-            if (response.success)
-            {
-                Debug.Log("Successfully submitted score.");
-                scoreSubmitted = true;
-                return;
-            }
-
-            Debug.Log("Failed to submit the score.");
-        });
-        return scoreSubmitted;
-    }
-
-    private bool SetPlayerNameRequest(bool nameSet)
-    {
-        LootLockerSDKManager.SetPlayerName(nameInputField.text, response =>
-        {
-            if (response.success)
-            {
-                Debug.Log("Successfully set player name.");
-                nameSet = true;
-                return;
-            }
-
-            Debug.Log("Failed to set player name.");
-        });
-        return nameSet;
     }
 
     public void AddXP(int score)
