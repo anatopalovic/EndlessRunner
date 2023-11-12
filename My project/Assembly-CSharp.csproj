@@ -61,6 +61,7 @@
     <Compile Include="Assets\TempleRunPrefabs\Tile.cs" />
     <Compile Include="Assets\TempleRunPrefabs\GameManager.cs" />
     <Compile Include="Assets\TempleRunPrefabs\PlayerController.cs" />
+    <Compile Include="Assets\TempleRunPrefabs\ScoreUpdater.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />
